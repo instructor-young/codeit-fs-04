@@ -13,7 +13,7 @@ function BreedPage() {
 
   useEffect(() => {
     api.getBreed(breedId).then((data) => setBreed(data));
-  }, []);
+  }, [breedId]);
 
   useEffect(() => {
     if (!breed) return;
@@ -27,26 +27,24 @@ function BreedPage() {
     <div>
       <h1 className={styles.name}>{breed.name}</h1>
 
-      <section className={styles.main}>
-        <img className={styles.image} src={image.url} width={100} />
+      <img className={styles.image} src={image.url} />
 
-        <ul>
-          <div>
-            <h5>성격/기질</h5>
-            <p>{breed.temperament}</p>
-          </div>
+      <ul>
+        <div>
+          <h5>성격/기질</h5>
+          <p>{breed.temperament}</p>
+        </div>
 
-          <div>
-            <h5>기대수명</h5>
-            <p>{breed.life_span}</p>
-          </div>
+        <div>
+          <h5>기대수명</h5>
+          <p>{breed.life_span}</p>
+        </div>
 
-          <div>
-            <h5>일반적인 양육 목적</h5>
-            <p>{breed.bred_for}</p>
-          </div>
-        </ul>
-      </section>
+        <div>
+          <h5>일반적인 양육 목적</h5>
+          <p>{breed.bred_for}</p>
+        </div>
+      </ul>
     </div>
   );
 }
