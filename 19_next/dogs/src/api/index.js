@@ -16,8 +16,17 @@ const getBreeds = async () => {
   return data;
 };
 
+const getBreed = async (breedId) => {
+  const url = `/breeds/${breedId}`;
+  const response = await client.get(url);
+  const data = response.data;
+
+  return data;
+};
+
 const api = {
   getBreeds,
+  getBreed,
 };
 
 export default api;
