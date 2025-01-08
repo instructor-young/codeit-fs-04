@@ -24,9 +24,18 @@ const getBreed = async (breedId) => {
   return data;
 };
 
+const getImageById = async (imageId) => {
+  const url = `/images/${imageId}`;
+  const response = await client.get(url);
+  const data = response.data;
+
+  return data;
+};
+
 const api = {
   getBreeds,
   getBreed,
+  getImageById,
 };
 
 export default api;

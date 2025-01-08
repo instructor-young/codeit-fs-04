@@ -1,0 +1,18 @@
+.name {
+  margin: 0;
+  font-weight: bold;
+  font-size: 42px;
+}
+
+.main {
+  display: flex;
+  column-gap: 1.5rem;
+}
+
+.image {
+  width: 300px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  flex-shrink: 0;
+  flex-grow: 1;
+}
