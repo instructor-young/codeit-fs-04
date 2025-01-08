@@ -29,21 +29,21 @@ function BreedPage() {
 
       <img className={styles.image} src={image.url} />
 
-      <ul>
-        <div>
+      <ul className={styles.content}>
+        <li>
           <h5>성격/기질</h5>
           <p>{breed.temperament}</p>
-        </div>
+        </li>
 
-        <div>
+        <li>
           <h5>기대수명</h5>
           <p>{breed.life_span}</p>
-        </div>
+        </li>
 
-        <div>
+        <li>
           <h5>일반적인 양육 목적</h5>
           <p>{breed.bred_for}</p>
-        </div>
+        </li>
       </ul>
     </div>
   );
