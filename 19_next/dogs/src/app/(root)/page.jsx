@@ -1,18 +1,9 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import api from "../../api/index";
+import api from "../../api";
 import BreedCard from "./_components/BreedCard";
 import styles from "./_styles/HomePage.module.scss";
 
-function HomePage() {
-  const [breeds, setBreeds] = useState([]);
-
-  useEffect(() => {
-    api.getBreeds().then((data) => {
-      setBreeds(data);
-    });
-  }, []);
+async function HomePage() {
+  const breeds = await api.getBreeds();
 
   return (
     <section>

@@ -1,25 +1,12 @@
-"use client";
-
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import Image from "next/image";
 import api from "../../../../api";
 import styles from "./BreedPage.module.scss";
 
-function BreedPage() {
-  const params = useParams();
+async function BreedPage(props) {
+  const params = await props.params;
   const breedId = params.breedId;
-  const [breed, setBreed] = useState(null);
-  const [image, setImage] = useState(null);
-
-  useEffect(() => {
-    api.getBreed(breedId).then((data) => setBreed(data));
-  }, [breedId]);
-
-  useEffect(() => {
-    if (!breed) return;
-
-    api.getImageById(breed.reference_image_id).then((data) => setImage(data));
-  }, [breed]);
+  const breed = await api.getBreed(breedId);
+  const image = await api.getImageById(breed.reference_image_id);
 
   if (!breed || !image) return;
 
@@ -27,7 +14,13 @@ function BreedPage() {
     <div>
       <h1 className={styles.name}>{breed.name}</h1>
 
-      <img className={styles.image} src={image.url} />
+      <Image
+        alt={breed.name}
+        className={styles.image}
+        src={image.url}
+        width={300}
+        height={300}
+      />
 
       <ul className={styles.content}>
         <li>
