@@ -24,8 +24,17 @@ const getMovieList = async (category) => {
   return movieList;
 };
 
+const getMovie = async (movieId) => {
+  const url = `/movie/${movieId}`;
+  const response = await tmdbClient.get(url);
+  const data = response.data;
+
+  return data;
+};
+
 const api = {
   getMovieList,
+  getMovie,
 };
 
 export default api;
