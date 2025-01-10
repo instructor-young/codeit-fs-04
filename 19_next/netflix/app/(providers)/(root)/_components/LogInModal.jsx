@@ -1,5 +1,6 @@
 "use client";
 
+import api from "@/api";
 import Modal from "@/components/Modal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useModal } from "@/contexts/ModalContext";
@@ -8,14 +9,20 @@ function LogInModal() {
   const { logIn } = useAuth();
   const modal = useModal();
 
-  const handleClickLogIn = () => {
-    logIn();
-    modal.close();
+  const handleClickLogIn = async () => {
+    const isLoginSuccess = await api.logIn({
+      email: "test@test.com",
+      password: "test1234",
+    });
+    console.log("isLoginSuccess: ", isLoginSuccess);
+
+    // logIn();
+    // modal.close();
   };
 
   return (
     <Modal>
-      <form>
+      <form onSubmit={(e) => e.preventDefault()}>
         <h2 className="text-center font-bold text-2xl mb-8">로그인하기</h2>
 
         <input

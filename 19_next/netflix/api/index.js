@@ -32,7 +32,16 @@ const getMovie = async (movieId) => {
   return data;
 };
 
+const logIn = async (dto) => {
+  const url = "http://localhost:3000/api/auth/log-in";
+  const response = await axios.post(url, dto);
+  const data = response.data;
+
+  return data;
+};
+
 const api = {
+  logIn,
   getMovieList,
   getMovie,
 };
