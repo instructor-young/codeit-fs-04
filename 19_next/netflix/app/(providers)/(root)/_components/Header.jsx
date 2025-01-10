@@ -1,21 +1,11 @@
 "use client";
 
 import Logo from "@/assets/svg/logo.svg";
-import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
 import Link from "next/link";
+import AuthButton from "./AuthButton";
 
 function Header() {
-  const { isLoggedIn, logIn, logOut } = useAuth();
-
-  const handleClickLogIn = () => {
-    if (isLoggedIn) {
-      logOut();
-    } else {
-      logIn();
-    }
-  };
-
   return (
     <header className="h-20 px-8 flex items-center justify-between">
       {/* 로고 */}
@@ -31,9 +21,7 @@ function Header() {
 
       {/* 로그인 버튼 등 */}
       <div>
-        <button onClick={handleClickLogIn} className="font-bold">
-          {isLoggedIn ? "로그아웃" : "로그인"}
-        </button>
+        <AuthButton />
       </div>
     </header>
   );
