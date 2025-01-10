@@ -2,6 +2,7 @@ import api from "@/api";
 import Image from "next/image";
 import Genre from "./_components/Genre";
 import LikeButton from "./_components/LikeButton";
+import MovieComments from "./_components/MovieComments";
 import Rating from "./_components/Rating";
 
 async function MoviePage(props) {
@@ -11,7 +12,7 @@ async function MoviePage(props) {
   const rating = Number(movie.vote_average.toFixed(1));
 
   return (
-    <main>
+    <main className="py-10">
       <div className="fixed left-0 right-0 top-0 bottom-0 -z-10 blur-2xl">
         <Image
           alt={movie.title}
@@ -60,6 +61,9 @@ async function MoviePage(props) {
           <LikeButton />
         </div>
       </div>
+
+      {/* 댓글 영역 */}
+      <MovieComments />
     </main>
   );
 }
