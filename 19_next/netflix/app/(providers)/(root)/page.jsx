@@ -22,22 +22,22 @@ async function HomePage() {
       <MovieSection
         title="현재 상영중인 영화"
         category="now_playing"
-        initialData={nowPlayingMovies}
+        initialData={nowPlayingMovies.results}
       />
       <MovieSection
         title="인기 있는 영화"
         category="popular"
-        initialData={popularMovies}
+        initialData={popularMovies.results}
       />
       <MovieSection
         title="평점이 높은 영화"
         category="top_rated"
-        initialData={topRatedMovies}
+        initialData={topRatedMovies.results}
       />
       <MovieSection
         title="곧 상영 예정인 영화"
         category="upcoming"
-        initialData={upcomingMovies}
+        initialData={upcomingMovies.results}
       />
     </main>
   );

@@ -15,13 +15,12 @@ const tmdbClient = axios.create({
   },
 });
 
-const getMovieList = async (category) => {
+const getMovieList = async (category, page = 1) => {
   const url = `/movie/${category}`;
-  const response = await tmdbClient.get(url);
+  const response = await tmdbClient.get(url, { params: { page } });
   const data = response.data;
-  const movieList = data.results;
 
-  return movieList;
+  return data;
 };
 
 const getMovie = async (movieId) => {

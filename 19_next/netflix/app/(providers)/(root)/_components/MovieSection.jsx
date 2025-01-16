@@ -6,7 +6,7 @@ import MovieCard from "./MovieCard";
 
 function MovieSection({ title, category, initialData }) {
   const { data: movies } = useQuery({
-    queryFn: () => api.getMovieList(category),
+    queryFn: () => api.getMovieList(category).then((data) => data.results),
     queryKey: ["movies", { category }],
     initialData,
   });
