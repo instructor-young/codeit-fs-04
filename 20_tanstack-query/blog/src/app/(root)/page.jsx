@@ -34,7 +34,13 @@ function HomePage() {
 
       <hr className="my-10" />
 
-      {error || <PostList isLoading={isLoading} posts={posts} />}
+      {error || (
+        <PostList
+          isLoading={isLoading}
+          posts={posts}
+          updatePosts={updatePosts}
+        />
+      )}
     </Page>
   );
 }
