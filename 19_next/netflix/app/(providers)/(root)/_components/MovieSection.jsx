@@ -1,6 +1,16 @@
+"use client";
+
+import api from "@/api";
+import { useQuery } from "@tanstack/react-query";
 import MovieCard from "./MovieCard";
 
-function MovieSection({ title, movies }) {
+function MovieSection({ title, category, initialData }) {
+  const { data: movies } = useQuery({
+    queryFn: () => api.getMovieList(category),
+    queryKey: ["movies", { category }],
+    initialData,
+  });
+
   return (
     <section className="[&+&]:mt-20">
       <h2 className={`px-8 text-3xl font-bold mb-6`}>{title}</h2>
