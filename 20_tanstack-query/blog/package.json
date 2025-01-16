@@ -10,6 +10,8 @@
     "json-server": "json-server db.json --port=5555"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.64.1",
+    "@tanstack/react-query-devtools": "^5.64.1",
     "axios": "^1.7.9",
     "json-server": "^1.0.0-beta.3",
     "next": "15.1.4",

@@ -44,7 +44,7 @@ function PostDetailPage() {
   const handleClickDelete = async () => {
     await api.deletePost(postId);
 
-    router.push("/");
+    router.replace("/");
   };
 
   useEffect(() => {
