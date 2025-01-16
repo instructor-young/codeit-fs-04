@@ -1,25 +1,18 @@
 "use client";
 
 import api from "@/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-import { useState } from "react";
 
-function PostList({ isLoading, posts, updatePosts }) {
-  const [error, setError] = useState(null);
+function PostList({ isLoading, posts }) {
+  const queryClient = useQueryClient();
+  const { mutate, isError } = useMutation({
+    mutationFn: (postId) => api.deletePost(postId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["posts"] }),
+  });
 
   if (isLoading) return <span>로딩 중...</span>;
-
-  const handleClickDelete = async (postId) => {
-    try {
-      await api.deletePost(postId);
-
-      updatePosts();
-    } catch {
-      setError("에러 발생...");
-    }
-  };
-
-  if (error) return <div>에러 발생...</div>;
+  if (isError) return <span>에러 발생...</span>;
 
   return (
     <ul className="list-disc list-inside grid grid-cols-1 gap-y-4">
@@ -32,10 +25,7 @@ function PostList({ isLoading, posts, updatePosts }) {
             {post.title}
           </Link>
 
-          <button
-            onClick={() => handleClickDelete(post.id)}
-            className="ml-5 text-red-500"
-          >
+          <button onClick={() => mutate(post.id)} className="ml-5 text-red-500">
             삭제
           </button>
         </li>

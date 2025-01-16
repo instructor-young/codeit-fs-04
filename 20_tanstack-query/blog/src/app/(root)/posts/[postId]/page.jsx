@@ -2,13 +2,13 @@
 
 import api from "@/api";
 import Page from "@/components/Page";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 function PostDetailPage() {
-  const [post, setPost] = useState(null);
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -16,49 +16,38 @@ function PostDetailPage() {
   const params = useParams();
   const postId = params.postId;
 
-  const loadPost = async () => {
-    try {
-      setIsLoading(true);
-      const post = await api.getPost(postId);
+  const { data: post } = useQuery({
+    queryFn: () => api.getPost(postId),
+    queryKey: ["post", { postId }],
+  });
 
-      setPost(post);
-    } catch {
-      setError("에러 발생...");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { mutate: deletePost } = useMutation({
+    mutationFn: () => api.deletePost(postId),
+    onSuccess: () => router.replace("/"),
+  });
+
+  const { mutate: updatePost } = useMutation({
+    mutationFn: (updatedPost) => api.updatePost(postId, updatedPost),
+    onSuccess: () => {
+      setIsEditing(false);
+      queryClient.invalidateQueries({ queryKey: ["post", { postId }] });
+    },
+  });
 
   const handleSubmitEditingForm = async (e) => {
     e.preventDefault();
 
-    const post = { title, content };
-
-    await api.updatePost(postId, post);
-
-    setIsEditing(false);
-
-    loadPost();
-  };
-
-  const handleClickDelete = async () => {
-    await api.deletePost(postId);
-
-    router.replace("/");
+    const updatedPost = { title, content };
+    updatePost(updatedPost);
   };
 
   useEffect(() => {
-    loadPost();
-  }, []);
-
-  useEffect(() => {
-    if (post) {
+    if (isEditing) {
       setTitle(post.title);
       setContent(post.content);
     }
-  }, [post]);
+  }, [isEditing]);
 
-  if (error) return <Page>{error}</Page>;
   if (isLoading) return <Page>로딩 중...</Page>;
   if (isEditing)
     return (
@@ -82,6 +71,13 @@ function PostDetailPage() {
           <button className="mt-4 bg-black text-white px-5 py-2.5 font-semibold rounded">
             수정하기
           </button>
+          <button
+            type="button"
+            onClick={() => setIsEditing(false)}
+            className="ml-4 bg-black text-white px-5 py-2.5 font-semibold rounded"
+          >
+            취소
+          </button>
         </form>
       </Page>
     );
@@ -96,7 +92,7 @@ function PostDetailPage() {
         <button onClick={() => setIsEditing(true)} className="text-blue-500">
           수정
         </button>
-        <button onClick={handleClickDelete} className="text-red-500">
+        <button onClick={deletePost} className="text-red-500">
           삭제
         </button>
       </div>

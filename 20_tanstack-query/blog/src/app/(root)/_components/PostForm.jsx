@@ -1,9 +1,20 @@
 "use client";
 
 import api from "@/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
-function PostForm({ updatePosts }) {
+function PostForm() {
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: (newPost) => api.createPost(newPost),
+    onSuccess: () => {
+      setTitle("");
+      setContent("");
+
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
@@ -12,12 +23,7 @@ function PostForm({ updatePosts }) {
 
     const newPost = { title, content };
 
-    await api.createPost(newPost);
-
-    setTitle("");
-    setContent("");
-
-    updatePosts();
+    mutate(newPost);
   };
 
   return (
