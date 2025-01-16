@@ -16,6 +16,20 @@ const getPosts = async () => {
   return data;
 };
 
+const getPost = async (postId) => {
+  const response = await client.get(`/posts/${postId}`);
+  const data = response.data;
+
+  return data;
+};
+
+const updatePost = async (postId, post) => {
+  const response = await client.put(`/posts/${postId}`, post);
+  const data = response.data;
+
+  return data;
+};
+
 const deletePost = async (postId) => {
   const response = await client.delete(`/posts/${postId}`);
   const data = response.data;
@@ -26,6 +40,8 @@ const deletePost = async (postId) => {
 const api = {
   createPost,
   getPosts,
+  getPost,
+  updatePost,
   deletePost,
 };
 
