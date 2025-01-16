@@ -13,6 +13,7 @@ function MoviePage({ movieId, initialData }) {
     queryFn: () => api.getMovie(movieId),
     queryKey: ["movie", { movieId }],
     initialData,
+    staleTime: 300000,
   });
 
   const rating = Number(movie.vote_average.toFixed(1));
