@@ -1,5 +1,7 @@
 "use client";
 
+import { getToken } from "@/config/token";
+
 function CreatePostForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -8,7 +10,10 @@ function CreatePostForm() {
     const data = JSON.stringify({ title });
     const url = "http://localhost:3000/api/posts";
     const method = "POST";
-    const headers = { "Content-Type": "application/json" };
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    };
 
     // 쿠키와 관련한 어떠한 말도 한 적이 없음, 하지만 브라우저가 알아서 쿠키 묻혀서 감
     await fetch(url, { headers, method, body: data });

@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useModal } from "@/contexts/ModalContext";
+import Link from "next/link";
 import LogInModal from "./LogInModal";
 
 function AuthButton() {
@@ -20,9 +21,14 @@ function AuthButton() {
     );
 
   return (
-    <button onClick={handleClickLogIn} className="font-bold">
-      로그인
-    </button>
+    <div className="flex items-center gap-x-5">
+      <Link href="/auth/sign-up" className="font-bold">
+        회원가입
+      </Link>
+      <button onClick={handleClickLogIn} className="font-bold">
+        로그인
+      </button>
+    </div>
   );
 }
 

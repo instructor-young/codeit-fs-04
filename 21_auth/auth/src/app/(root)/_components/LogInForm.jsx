@@ -1,5 +1,6 @@
 "use client";
 
+import { setToken } from "@/config/token";
 import Cookie from "cookie-universal";
 
 function LogInForm() {
@@ -13,9 +14,11 @@ function LogInForm() {
     const method = "POST";
     const headers = { "Content-Type": "application/json" };
 
-    await fetch(url, { method, headers, body: data });
+    const response = await fetch(url, { method, headers, body: data });
+    const result = await response.json();
+    const token = result.token;
 
-    console.log("쿠키 보여라~!", document.cookie);
+    setToken(token);
   };
 
   const handleClickLogOut = () => {

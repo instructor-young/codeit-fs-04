@@ -11,6 +11,8 @@
   "dependencies": {
     "@prisma/client": "^6.2.1",
     "cookie-universal": "^2.2.2",
+    "jsonwebtoken": "^9.0.2",
+    "nanoid": "^5.0.9",
     "next": "15.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
