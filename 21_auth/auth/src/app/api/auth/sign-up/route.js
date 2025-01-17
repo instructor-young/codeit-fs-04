@@ -9,13 +9,11 @@ export async function POST(request) {
     return NextResponse.json("Bad Request", { status: 400 });
 
   try {
-    const user = await prismaClient.user.create({ data: { email, password } });
+    await prismaClient.user.create({ data: { email, password } });
   } catch (e) {
-    console.log(e);
+    console.log(e.message);
     return NextResponse.json("Bad Request", { status: 400 });
   }
 
-  return NextResponse.json("OK", {
-    headers: { "Set-Cookie": "identification=codeit; path=/;" },
-  });
+  return NextResponse.json("OK");
 }

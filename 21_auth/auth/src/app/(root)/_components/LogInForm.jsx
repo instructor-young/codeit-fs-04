@@ -1,5 +1,7 @@
 "use client";
 
+import Cookie from "cookie-universal";
+
 function LogInForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -11,8 +13,14 @@ function LogInForm() {
     const method = "POST";
     const headers = { "Content-Type": "application/json" };
 
-    const response = await fetch(url, { method, headers, body: data });
-    const result = await response.json();
+    await fetch(url, { method, headers, body: data });
+
+    console.log("쿠키 보여라~!", document.cookie);
+  };
+
+  const handleClickLogOut = () => {
+    const cookies = Cookie();
+    cookies.removeAll();
   };
 
   return (
@@ -31,6 +39,13 @@ function LogInForm() {
         placeholder="password"
       />
       <button className="border border-black">로그인</button>
+      <button
+        onClick={handleClickLogOut}
+        type="button"
+        className="border border-black"
+      >
+        로그아웃
+      </button>
     </form>
   );
 }
