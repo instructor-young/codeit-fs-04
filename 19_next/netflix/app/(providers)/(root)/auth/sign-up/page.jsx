@@ -1,10 +1,41 @@
+"use client";
+
+import api from "@/api";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 function SignUpPage() {
+  const router = useRouter();
+  const { mutate: signUp } = useMutation({
+    mutationFn: api.signUp,
+    onSuccess: () => {
+      router.replace("/");
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    const passwordConfirm = e.target.passwordConfirm.value;
+
+    if (!email) return alert("이메일을 입력해 주세요");
+    if (!password) return alert("비밀번호를 입력해 주세요");
+    if (!passwordConfirm) return alert("비밀번호 확인을 입력해 주세요");
+    if (password !== passwordConfirm)
+      return alert("비밀번호와 비밀번호 확인이 일치하지 않습니다");
+
+    const data = { email, password };
+
+    signUp(data);
+  };
+
   return (
-    <main className="h-screen flex flex-col items-center justify-center p-8">
-      <form className="flex flex-col gap-y-5">
+    <main className="h-[calc(100vh-80px)] flex flex-col items-center justify-center p-8">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-y-5">
         <h1 className="text-3xl font-bold">회원가입</h1>
 
         <Input label="이메일" name="email" type="email" required />

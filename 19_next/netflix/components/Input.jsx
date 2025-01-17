@@ -27,7 +27,7 @@ function Input({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="transition-all px-4 py-2 text-black rounded-md outline-none focus:ring-4 ring-white/75 ring-offset-2 ring-offset-gray-500"
+        className="border border-gray-400 transition-all px-4 py-2 text-black rounded-md outline-none focus:ring-4 ring-white/75 ring-offset-2 ring-offset-gray-500"
       />
       {helperText && (
         <span className="text-sm text-white/80">{helperText}</span>

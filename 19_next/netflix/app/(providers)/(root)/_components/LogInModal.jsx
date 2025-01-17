@@ -1,6 +1,8 @@
 "use client";
 
 import api from "@/api";
+import Button from "@/components/Button";
+import Input from "@/components/Input";
 import Modal from "@/components/Modal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useModal } from "@/contexts/ModalContext";
@@ -34,16 +36,17 @@ function LogInModal() {
       <form onSubmit={(e) => e.preventDefault()}>
         <h2 className="text-center font-bold text-2xl mb-8">로그인하기</h2>
 
-        <input
+        <Input
+          label="이메일"
           type="email"
-          className="border border-gray-400 px-5 py-2.5 rounded-lg w-full"
           placeholder="이메일"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <input
+        <div className="mb-2" />
+        <Input
+          label="비밀번호"
           type="password"
-          className="mt-4 border border-gray-400 px-5 py-2.5 rounded-lg w-full"
           placeholder="비밀번호"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -51,12 +54,14 @@ function LogInModal() {
 
         {error && <p className="text-sm mt-2 text-red-500">{error}</p>}
 
-        <button
+        <Button
           onClick={handleClickLogIn}
-          className="bg-red-600 py-2.5 w-full rounded-lg text-white font-semibold mt-4"
+          intent="primary"
+          size="lg"
+          className={"text-white w-full mt-4"}
         >
           로그인
-        </button>
+        </Button>
       </form>
     </Modal>
   );
