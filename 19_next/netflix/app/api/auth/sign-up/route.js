@@ -1,20 +1,26 @@
-import { getDB } from "@/db";
+import { USER_SALT_ROUNDS } from "@/config";
+import prisma from "@/prisma/client";
+import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
-  const { email, password } = (await request.json()) || {};
+  try {
+    const { email, password } = (await request.json()) || {};
+    if (!email || !password)
+      return NextResponse.json("Invalid input", { status: 400 });
 
-  const db = getDB();
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser)
+      return NextResponse.json("Already used email", { status: 400 });
 
-  // 이미 동일한 이메일로 가입한 계정이 있는지 확인
-  const existingUser = db.users.find((user) => user.email === email);
-  if (existingUser)
-    return NextResponse.json("Already used email", { status: 400 });
+    const encryptedPassword = await bcrypt.hash(password, USER_SALT_ROUNDS);
+    const data = { email, encryptedPassword };
+    await prisma.user.create({ data });
 
-  const newUser = { email, password };
-  db.users.push(newUser);
-
-  console.log("db", db);
-
-  return NextResponse.json("OK");
+    return NextResponse.json("OK");
+  } catch (e) {
+    console.log(e.message);
+  } finally {
+    return NextResponse.json("OK");
+  }
 }
