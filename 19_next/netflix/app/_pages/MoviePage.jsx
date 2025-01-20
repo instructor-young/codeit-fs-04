@@ -65,7 +65,7 @@ function MoviePage({ movieId, initialData }) {
           {/* 스토리 개괄 */}
           <p>{movie.overview}</p>
 
-          <LikeButton />
+          <LikeButton movieId={movieId} />
         </div>
       </div>
 

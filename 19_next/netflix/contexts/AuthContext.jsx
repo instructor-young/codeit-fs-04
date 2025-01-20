@@ -20,11 +20,11 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     async function initializeLogInStatus() {
-      // 1. 로컬스토리지를 뒤져서, 로그인 상태라는 단서를 찾음
-      const prevRefreshToken = localStorage.getItem("refreshToken");
-      if (!prevRefreshToken) return;
-
       try {
+        // 1. 로컬스토리지를 뒤져서, 로그인 상태라는 단서를 찾음
+        const prevRefreshToken = localStorage.getItem("refreshToken");
+        if (!prevRefreshToken) return;
+
         // 2. 로그인 상태라는 단서가 있으면, 서버에 토큰을 요청
         await api.refreshToken(prevRefreshToken);
 

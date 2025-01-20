@@ -11,9 +11,34 @@ datasource db {
 }
 
 model User {
-  id                String   @id @default(cuid())
-  email             String   @unique
+  id                String         @id @default(cuid())
+  email             String         @unique
   encryptedPassword String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @default(now()) @updatedAt
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @default(now()) @updatedAt
+  MovieLike         MovieLike[]
+  MovieComment      MovieComment[]
+}
+
+model MovieLike {
+  id        String   @id @default(cuid())
+  movieId   Int
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([movieId, userId])
+}
+
+model MovieComment {
+  id String @id @default(cuid())
+
+  movieId Int
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+
+  content String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
