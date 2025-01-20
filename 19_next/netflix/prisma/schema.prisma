@@ -10,14 +10,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ProviderName {
+  local
+  kakao
+}
+
 model User {
   id                String         @id @default(cuid())
-  email             String         @unique
-  encryptedPassword String
+  providerName      ProviderName
+  providerId        String
+  encryptedPassword String?
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @default(now()) @updatedAt
   MovieLike         MovieLike[]
   MovieComment      MovieComment[]
+
+  @@unique([providerName, providerId])
 }
 
 model MovieLike {

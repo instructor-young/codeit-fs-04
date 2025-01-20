@@ -62,11 +62,7 @@ export async function extractUserIdFromRequest(request) {
   const authorization = request.headers.get("authorization") || "";
   const accessToken = authorization.split("Bearer ")[1];
 
-  const { email } = verify(accessToken, process.env.JWT_SECRET_KEY);
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) throw new Error("No user found");
+  const { sub } = verify(accessToken, process.env.JWT_SECRET_KEY);
 
-  const userId = user.id;
-
-  return userId;
+  return sub;
 }

@@ -8,7 +8,7 @@ export async function GET(_, context) {
     const movieId = Number(params.movieId);
     const movieComments = await prisma.movieComment.findMany({
       where: { movieId },
-      include: { user: { select: { email: true } } },
+      include: { user: { select: { id: true } } },
     });
 
     return NextResponse.json(movieComments);

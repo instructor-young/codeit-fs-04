@@ -8,12 +8,16 @@ export async function POST(request) {
   if (!email || !password)
     return NextResponse.json("Invalid input", { status: 400 });
 
-  const existingUser = await prisma.user.findUnique({ where: { email } });
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      providerName_providerId: { providerName: "local", providerId: email },
+    },
+  });
   if (existingUser)
     return NextResponse.json("Already used email", { status: 400 });
 
   const encryptedPassword = await bcrypt.hash(password, USER_SALT_ROUNDS);
-  const data = { email, encryptedPassword };
+  const data = { providerName: "local", providerId: email, encryptedPassword };
 
   await prisma.user.create({ data });
 

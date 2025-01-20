@@ -27,6 +27,12 @@ function LogInModal() {
     }
   };
 
+  const handleClickStartWithKakao = () => {
+    Kakao.Auth.authorize({
+      redirectUri: "http://localhost:3000/api/auth/kakao",
+    });
+  };
+
   useEffect(() => {
     setError("");
   }, [email, password]);
@@ -35,6 +41,15 @@ function LogInModal() {
     <Modal>
       <form onSubmit={(e) => e.preventDefault()}>
         <h2 className="text-center font-bold text-2xl mb-8">로그인하기</h2>
+
+        <button
+          onClick={handleClickStartWithKakao}
+          className="bg-yellow-400 w-full py-3 rounded-lg font-bold"
+        >
+          카카오로 시작하기
+        </button>
+
+        <hr className="my-5" />
 
         <Input
           label="이메일"

@@ -87,7 +87,7 @@ function MovieComments({ movieId, movieComments: initialMovieComments }) {
         {orderedComments.map((comment) => (
           <li key={comment.id} className="bg-black/50 p-5 rounded-lg">
             <span className="text-sm font-bold mb-4 inline-block">
-              {comment.user.email}
+              {comment.user.id}
             </span>
             <p>{comment.content}</p>
           </li>
