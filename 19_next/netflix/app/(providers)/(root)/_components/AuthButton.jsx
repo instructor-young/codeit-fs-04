@@ -6,12 +6,14 @@ import Link from "next/link";
 import LogInModal from "./LogInModal";
 
 function AuthButton() {
-  const { isLoggedIn, logOut } = useAuth();
+  const { isAuthInitialized, isLoggedIn, logOut } = useAuth();
   const modal = useModal();
 
   const handleClickLogIn = () => {
     modal.open(<LogInModal />);
   };
+
+  if (!isAuthInitialized) return null;
 
   if (isLoggedIn)
     return (

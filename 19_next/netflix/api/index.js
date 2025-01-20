@@ -46,10 +46,27 @@ const logIn = async (dto) => {
   const response = await localClient.post(url, dto);
   const data = response.data;
 
-  const token = data.token;
+  const { accessToken, refreshToken } = data;
 
   // 이후 요청의 헤더에 토큰이 실려갈 수 있도록 조치
-  localClient.defaults.headers.Authorization = `Bearer ${token}`;
+  localClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
+  localStorage.setItem("refreshToken", refreshToken);
+
+  return data;
+};
+
+const refreshToken = async (prevRefreshToken) => {
+  const url = "/api/auth/refresh-token";
+  const response = await localClient.post(url, {
+    refreshToken: prevRefreshToken,
+  });
+  const data = response.data;
+
+  const { accessToken, refreshToken } = data;
+
+  // 이후 요청의 헤더에 토큰이 실려갈 수 있도록 조치
+  localClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
+  localStorage.setItem("refreshToken", refreshToken);
 
   return data;
 };
@@ -59,6 +76,7 @@ const api = {
   logIn,
   getMovieList,
   getMovie,
+  refreshToken,
 };
 
 export default api;

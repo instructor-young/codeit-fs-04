@@ -19,10 +19,18 @@ export async function POST(request) {
     return NextResponse.json("Wrong password", { status: 400 });
 
   // 토큰을 만들어서 바디에 실어 보낸다.
-  const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET_KEY, {
-    expiresIn: "5m",
-  });
-  const data = { token };
+  const accessToken = jwt.sign(
+    { email: user.email },
+    process.env.JWT_SECRET_KEY,
+    { expiresIn: "5m" }
+  );
+  const refreshToken = jwt.sign(
+    { email: user.email },
+    process.env.JWT_SECRET_KEY,
+    { expiresIn: "2d" }
+  );
+
+  const data = { accessToken, refreshToken };
 
   return NextResponse.json(data);
 }
