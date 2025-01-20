@@ -1,6 +1,6 @@
 "use client";
 
-import api from "@/api";
+import api, { localClient } from "@/api";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -41,7 +41,15 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logIn = () => setIsLoggedIn(true);
-  const logOut = () => setIsLoggedIn(false);
+  const logOut = () => {
+    setIsLoggedIn(false);
+
+    // #1. api의 header에서 accessToken 제거
+    localClient.defaults.headers["Authorization"] = "";
+
+    // #2. localStorage에서 refreshToken 제거
+    localStorage.removeItem("refreshToken");
+  };
 
   const value = {
     isAuthInitialized,

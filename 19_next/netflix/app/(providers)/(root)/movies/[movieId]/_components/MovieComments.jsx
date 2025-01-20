@@ -1,20 +1,38 @@
 "use client";
 
+import api from "@/api";
 import Button from "@/components/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useModal } from "@/contexts/ModalContext";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import { useState } from "react";
 import LogInModal from "../../../_components/LogInModal";
 
-function MovieComments() {
-  const [commentContent, setCommentContent] = useState("");
-  const [comments, setComments] = useState([]);
-  const [orderedByCreatedAt, setOrderedByCreatedAt] = useState("desc");
-  const { isLoggedIn } = useAuth();
+function MovieComments({ movieId, movieComments: initialMovieComments }) {
   const modal = useModal();
+  const { isLoggedIn } = useAuth();
+  const queryClient = useQueryClient();
+  const [orderedByCreatedAt, setOrderedByCreatedAt] = useState("desc");
+  const [content, setContent] = useState("");
 
-  const orderedComments = [...comments].sort((aComment, bComment) =>
+  const { data: movieComments } = useQuery({
+    queryKey: ["movieComments", { movieId }],
+    queryFn: () => api.getMovieComments(movieId),
+    initialData: initialMovieComments,
+  });
+  const { mutate: writeMovieComment } = useMutation({
+    mutationFn: (content) => api.writeMovieComment(movieId, content),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["movieComments", { movieId }],
+      });
+
+      setContent("");
+    },
+  });
+
+  const orderedComments = [...movieComments].sort((aComment, bComment) =>
     orderedByCreatedAt === "asc"
       ? aComment.createdAt - bComment.createdAt
       : bComment.createdAt - aComment.createdAt
@@ -22,34 +40,22 @@ function MovieComments() {
 
   const handleSubmitComment = () => {
     if (!isLoggedIn) return modal.open(<LogInModal />);
+    if (content === "") return;
 
-    if (commentContent === "") return;
-
-    const comment = {
-      id: Date.now(),
-      author: {
-        email: "test@test.com",
-      },
-      content: commentContent,
-      createdAt: Date.now(),
-    };
-
-    setComments([...comments, comment]);
-
-    setCommentContent("");
+    writeMovieComment(content);
   };
 
   return (
     <section className="w-full max-w-screen-lg mx-auto px-8">
-      <h5 className="text-xl font-bold">감상평 ({comments.length}개)</h5>
+      <h5 className="text-xl font-bold">감상평 ({movieComments.length}개)</h5>
 
       <form className="mt-5 flex flex-col" onSubmit={(e) => e.preventDefault()}>
         <textarea
           placeholder="이곳에 감상평을 남겨주세요"
           className="w-full border rounded-lg p-5 text-black resize-none"
           rows={3}
-          value={commentContent}
-          onChange={(e) => setCommentContent(e.target.value)}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
         />
         <Button
           onClick={handleSubmitComment}
@@ -81,7 +87,7 @@ function MovieComments() {
         {orderedComments.map((comment) => (
           <li key={comment.id} className="bg-black/50 p-5 rounded-lg">
             <span className="text-sm font-bold mb-4 inline-block">
-              {comment.author.email}
+              {comment.user.email}
             </span>
             <p>{comment.content}</p>
           </li>

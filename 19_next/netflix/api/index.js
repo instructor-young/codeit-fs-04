@@ -16,7 +16,7 @@ const tmdbClient = axios.create({
   },
 });
 
-const localClient = axios.create({ baseURL: "http://localhost:3000" });
+export const localClient = axios.create({ baseURL: "http://localhost:3000" });
 
 localClient.interceptors.request.use(async (config) => {
   if (config.url === "/api/auth/refresh-token") return config;
@@ -118,6 +118,22 @@ const unlikeMovie = async (movieId) => {
   return data;
 };
 
+const getMovieComments = async (movieId) => {
+  const url = `/api/movies/${movieId}/comments`;
+  const response = await localClient.get(url);
+  const data = response.data;
+
+  return data;
+};
+
+const writeMovieComment = async (movieId, content) => {
+  const url = `/api/movies/${movieId}/comments`;
+  const response = await localClient.post(url, { content });
+  const data = response.data;
+
+  return data;
+};
+
 const api = {
   signUp,
   logIn,
@@ -127,6 +143,8 @@ const api = {
   getLikeOnMovie,
   likeMovie,
   unlikeMovie,
+  getMovieComments,
+  writeMovieComment,
 };
 
 export default api;

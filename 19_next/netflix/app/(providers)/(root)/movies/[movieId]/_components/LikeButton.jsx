@@ -18,11 +18,13 @@ function LikeButton({ movieId }) {
   });
   const { mutate: likeMovie } = useMutation({
     mutationFn: () => api.likeMovie(movieId),
-    onSuccess: () => queryClient.invalidateQueries({queryKey: ["movieLike", { movieId }]})
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["movieLike", { movieId }] }),
   });
   const { mutate: unlikeMovie } = useMutation({
     mutationFn: () => api.unlikeMovie(movieId),
-    onSuccess: () => queryClient.invalidateQueries({queryKey: ["movieLike", { movieId }]})
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["movieLike", { movieId }] }),
   });
 
   const label = isLoggedIn && isLiked ? "찜 풀기" : "찜 하기";
@@ -39,7 +41,7 @@ function LikeButton({ movieId }) {
     <Button
       onClick={handleClick}
       size="lg"
-      intent={isLiked ? "white" : "primary"}
+      intent={isLoggedIn && isLiked ? "white" : "primary"}
       className={"w-full mt-4"}
     >
       {label}

@@ -8,11 +8,11 @@ import LikeButton from "../(providers)/(root)/movies/[movieId]/_components/LikeB
 import MovieComments from "../(providers)/(root)/movies/[movieId]/_components/MovieComments";
 import Rating from "../(providers)/(root)/movies/[movieId]/_components/Rating";
 
-function MoviePage({ movieId, initialData }) {
+function MoviePage({ movieId, initialMovie, initialMovieComments }) {
   const { data: movie } = useQuery({
     queryFn: () => api.getMovie(movieId),
     queryKey: ["movie", { movieId }],
-    initialData,
+    initialData: initialMovie,
     staleTime: 300000,
   });
 
@@ -70,7 +70,7 @@ function MoviePage({ movieId, initialData }) {
       </div>
 
       {/* 댓글 영역 */}
-      <MovieComments />
+      <MovieComments movieId={movieId} movieComments={initialMovieComments} />
     </main>
   );
 }
