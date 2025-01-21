@@ -1,7 +1,7 @@
 "use client";
 
 import api, { localClient } from "@/api";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext({});
@@ -13,6 +13,21 @@ export function AuthProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const accessToken = searchParams.get("accessToken");
+  const refreshToken = searchParams.get("refreshToken");
+
+  useEffect(() => {
+    if (!accessToken && !refreshToken) {
+      // 헤더에 accssToken
+      localClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
+
+      // 로컬스토리지에 refreshToken
+      localStorage.setItem("refreshToken", refreshToken);
+
+      router.replace("/?");
+    }
+  }, [accessToken, refreshToken]);
 
   useEffect(() => {
     if (isLoggedIn && pathname === "/auth/sign-up") router.replace("/");

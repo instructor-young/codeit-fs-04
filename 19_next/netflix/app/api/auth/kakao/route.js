@@ -1,5 +1,6 @@
 import prisma from "@/prisma/client";
 import axios from "axios";
+import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
 /**
@@ -45,7 +46,19 @@ export async function GET(request) {
     if (!user)
       user = await prisma.user.create({ data: { providerName, providerId } });
 
-    return NextResponse.redirect(request.nextUrl.origin);
+    const accessToken = jwt.sign({ sub: user.id }, process.env.JWT_SECRET_KEY, {
+      expiresIn: "5m",
+    });
+    const refreshToken = jwt.sign(
+      { sub: user.id },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: "2d",
+      }
+    );
+    const url = `${request.nextUrl.origin}?accessToken=${accessToken}&refreshToken=${refreshToken}`;
+
+    return NextResponse.redirect(url);
   } catch (e) {
     console.log(e.message);
     return NextResponse.json("OK");
