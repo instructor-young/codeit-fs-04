@@ -1,33 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>전통적 방식</h1>
 
     <h2>카운트</h2>
 
     <button id="button">카운트 올리기</button>
     <div id="count"></div>
-    
 
     <script>
-        let count = 1;
+      let count = 1;
 
-        const buttonDOM = document.getElementById("button")
-        const countDOM = document.getElementById("count")
-        
-        countDOM.innerText = count;
+      const buttonDOM = document.getElementById("button");
+      const countDOM = document.getElementById("count");
 
-        function increaseCount() {
-            count += 1;
-            countDOM.innerText = count;
-        }
+      countDOM.innerText = count;
 
-        buttonDOM.onclick = increaseCount
+      function increaseCount() {
+        count += 1; // 숫자의 값을 올려
+        countDOM.innerText = count; // 올린 값을 화면에 다시 출력해
+      }
+
+      buttonDOM.onclick = increaseCount;
     </script>
-</body>
+  </body>
 </html>
