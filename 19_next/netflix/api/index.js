@@ -97,40 +97,40 @@ const refreshToken = async (prevRefreshToken) => {
 };
 
 const getLikeOnMovie = async (movieId) => {
-  const url = `/api/movies/${movieId}/like`;
-  const response = await localClient.get(url);
+  const url = `/movies/${movieId}/like`;
+  const response = await apiClient.get(url);
   const data = response.data;
 
   return data;
 };
 
 const likeMovie = async (movieId) => {
-  const url = `/api/movies/${movieId}/like`;
-  const response = await localClient.put(url);
+  const url = `/movies/${movieId}/like`;
+  const response = await apiClient.put(url);
   const data = response.data;
 
   return data;
 };
 
 const unlikeMovie = async (movieId) => {
-  const url = `/api/movies/${movieId}/like`;
-  const response = await localClient.delete(url);
+  const url = `/movies/${movieId}/like`;
+  const response = await apiClient.delete(url);
   const data = response.data;
 
   return data;
 };
 
 const getMovieComments = async (movieId) => {
-  const url = `/api/movies/${movieId}/comments`;
-  const response = await localClient.get(url);
+  const url = `/movies/${movieId}/comments`;
+  const response = await apiClient.get(url);
   const data = response.data;
 
   return data;
 };
 
 const writeMovieComment = async (movieId, content) => {
-  const url = `/api/movies/${movieId}/comments`;
-  const response = await localClient.post(url, { content });
+  const url = `/movies/${movieId}/comments`;
+  const response = await apiClient.post(url, { content });
   const data = response.data;
 
   return data;
