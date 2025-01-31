@@ -10,7 +10,7 @@ import Rating from "../(providers)/(root)/movies/[movieId]/_components/Rating";
 
 function MoviePage({ movieId, initialMovie, initialMovieComments }) {
   const { data: movie } = useQuery({
-    queryFn: () => api.getMovie(movieId),
+    queryFn: () => api.movies.getMovie(movieId),
     queryKey: ["movie", { movieId }],
     initialData: initialMovie,
     staleTime: 300000,

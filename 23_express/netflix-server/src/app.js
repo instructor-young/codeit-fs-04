@@ -14,6 +14,7 @@ const PORT = 5555;
 app.use(cors());
 app.use(authentication);
 app.use(express.json());
+app.use("/static", express.static("public"));
 
 // 라우트 핸들러
 app.use("/users", usersRoutes);

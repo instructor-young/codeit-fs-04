@@ -2,8 +2,20 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const prisma = require("../prisma/client");
+const multer = require("multer");
 
 const router = express.Router();
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/");
+  },
+  filename: function (req, file, cb) {
+    const extension = file.originalname.split(".").slice(-1)[0];
+
+    cb(null, file.fieldname + "-" + Date.now() + "." + extension);
+  },
+});
+const upload = multer({ storage: storage });
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
 /**
@@ -85,6 +97,65 @@ router.post("/refresh-token", async (req, res, next) => {
       return next(error);
     }
 
+    next(e);
+  }
+});
+
+/**
+ * 내 프로필 가져오기
+ */
+router.get("/profile", async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    if (!userId) throw new Error("401/Unauthorized");
+
+    const user = await prisma.user.findUnique({
+      omit: { encryptedPassword: true },
+      where: { id: userId },
+    });
+
+    res.json(user);
+  } catch (e) {
+    next(e);
+  }
+});
+
+/**
+ * 내 프로필 업데이트
+ */
+router.put("/profile", upload.single("avatar"), async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    if (!userId) throw new Error("401/Unauthorized");
+
+    const nickname = req.body.nickname;
+    const avatarUrl = !!req.file
+      ? "http://localhost:5555/static/" + req.file.filename
+      : undefined;
+
+    const user = await prisma.user.update({
+      data: { nickname, avatarUrl },
+      where: { id: userId },
+      omit: { encryptedPassword: true },
+    });
+
+    res.json(user);
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/reviews", async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    if (!userId) throw new Error("401/Unauthorized");
+
+    const movieComments = await prisma.movieComment.findMany({
+      where: { userId },
+    });
+
+    res.json(movieComments);
+  } catch (e) {
     next(e);
   }
 });

@@ -17,7 +17,7 @@ function LogInModal() {
 
   const handleClickLogIn = async () => {
     const dto = { email, password };
-    const isLoginSuccess = await api.logIn(dto);
+    const isLoginSuccess = await api.users.logIn(dto);
 
     if (isLoginSuccess) {
       logIn();

@@ -14,6 +14,7 @@ model User {
   id                Int            @id @default(autoincrement())
   email             String         @unique
   nickname          String         @default("")
+  avatarUrl         String?
   encryptedPassword String
   createdAt         DateTime       @default(now())
   movieLikes        MovieLike[]

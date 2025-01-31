@@ -1,6 +1,7 @@
 "use client";
 
-import api, { localClient } from "@/api";
+import api from "@/api";
+import clients from "@/api/clients";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -20,7 +21,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     if (!!accessToken && !!refreshToken) {
       // 헤더에 accssToken
-      localClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
+      clients.api.defaults.headers.Authorization = `Bearer ${accessToken}`;
 
       // 로컬스토리지에 refreshToken
       localStorage.setItem("refreshToken", refreshToken);
@@ -41,7 +42,7 @@ export function AuthProvider({ children }) {
         if (!prevRefreshToken) return;
 
         // 2. 로그인 상태라는 단서가 있으면, 서버에 토큰을 요청
-        await api.refreshToken(prevRefreshToken);
+        await api.users.refreshToken(prevRefreshToken);
 
         // 3. isLoggedIn을 true로 변경
         setIsLoggedIn(true);
@@ -60,7 +61,7 @@ export function AuthProvider({ children }) {
     setIsLoggedIn(false);
 
     // #1. api의 header에서 accessToken 제거
-    localClient.defaults.headers["Authorization"] = "";
+    clients.api.defaults.headers["Authorization"] = "";
 
     // #2. localStorage에서 refreshToken 제거
     localStorage.removeItem("refreshToken");

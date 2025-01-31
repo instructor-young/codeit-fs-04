@@ -17,9 +17,17 @@ function AuthButton() {
 
   if (isLoggedIn)
     return (
-      <button onClick={logOut} className="font-bold">
-        로그아웃
-      </button>
+      <div className="flex items-center gap-x-5">
+        <Link href="/my/reviews" className="font-bold">
+          내 리뷰
+        </Link>
+        <Link href="/my/account" className="font-bold">
+          내 계정
+        </Link>
+        <button onClick={logOut} className="font-bold">
+          로그아웃
+        </button>
+      </div>
     );
 
   return (

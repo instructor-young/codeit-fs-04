@@ -3,10 +3,10 @@ import MovieSection from "./_components/MovieSection";
 
 async function HomePage() {
   // 아래 네 개의 api 통신이, 서로를 기다리지 않고, 병렬적으로 통신을 시작
-  const nowPlayingMoviesPromise = api.getMovieList("now_playing");
-  const popularMoviesPromise = api.getMovieList("popular");
-  const topRatedMoviesPromise = api.getMovieList("top_rated");
-  const upcomingMoviesPromise = api.getMovieList("upcoming");
+  const nowPlayingMoviesPromise = api.movies.getMovieList("now_playing");
+  const popularMoviesPromise = api.movies.getMovieList("popular");
+  const topRatedMoviesPromise = api.movies.getMovieList("top_rated");
+  const upcomingMoviesPromise = api.movies.getMovieList("upcoming");
 
   // 병렬적으로 통신중인 모든 api 호출이 완료가 되면, 결과값이 정리되어 나옴
   const [nowPlayingMovies, popularMovies, topRatedMovies, upcomingMovies] =

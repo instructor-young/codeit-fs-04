@@ -9,7 +9,7 @@ function PopularMoviesPage() {
   const [page, setPage] = useState(1);
 
   const { data: movies, isLoading } = useQuery({
-    queryFn: () => api.getMovieList("popular", page),
+    queryFn: () => api.movies.getMovieList("popular", page),
     queryKey: ["movies", { category: "popular", page }],
     initialData: [],
   });

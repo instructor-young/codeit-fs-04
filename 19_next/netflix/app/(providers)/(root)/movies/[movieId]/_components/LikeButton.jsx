@@ -12,17 +12,17 @@ function LikeButton({ movieId }) {
   const { isLoggedIn } = useAuth();
   const { data: isLiked } = useQuery({
     queryKey: ["movieLike", { movieId }],
-    queryFn: () => api.getLikeOnMovie(movieId),
+    queryFn: () => api.movies.getLikeOnMovie(movieId),
     enabled: isLoggedIn,
     initialData: false,
   });
   const { mutate: likeMovie } = useMutation({
-    mutationFn: () => api.likeMovie(movieId),
+    mutationFn: () => api.movies.likeMovie(movieId),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["movieLike", { movieId }] }),
   });
   const { mutate: unlikeMovie } = useMutation({
-    mutationFn: () => api.unlikeMovie(movieId),
+    mutationFn: () => api.movies.unlikeMovie(movieId),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["movieLike", { movieId }] }),
   });

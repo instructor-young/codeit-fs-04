@@ -8,7 +8,7 @@ function TopRatedMoviesPage() {
   const targetRef = useRef(null);
 
   const { data, isLoading, fetchNextPage } = useInfiniteQuery({
-    queryFn: ({ pageParam }) => api.getMovieList("top_rated", pageParam),
+    queryFn: ({ pageParam }) => api.movies.getMovieList("top_rated", pageParam),
     queryKey: ["movies", { category: "top_rated", isInfinite: true }],
     initialPageParam: 1,
     getNextPageParam: (lastPage) => lastPage.page + 1,

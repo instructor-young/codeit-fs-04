@@ -18,11 +18,11 @@ function MovieComments({ movieId, movieComments: initialMovieComments }) {
 
   const { data: movieComments } = useQuery({
     queryKey: ["movieComments", { movieId }],
-    queryFn: () => api.getMovieComments(movieId),
+    queryFn: () => api.movies.getMovieComments(movieId),
     initialData: initialMovieComments,
   });
   const { mutate: writeMovieComment } = useMutation({
-    mutationFn: (content) => api.writeMovieComment(movieId, content),
+    mutationFn: (content) => api.movies.writeMovieComment(movieId, content),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["movieComments", { movieId }],

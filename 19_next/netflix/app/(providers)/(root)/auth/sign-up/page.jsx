@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 function SignUpPage() {
   const router = useRouter();
   const { mutate: signUp } = useMutation({
-    mutationFn: api.signUp,
+    mutationFn: api.users.signUp,
     onSuccess: () => {
       router.replace("/");
     },
