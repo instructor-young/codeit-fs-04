@@ -18,8 +18,10 @@ const tmdbClient = axios.create({
 
 export const localClient = axios.create({ baseURL: "http://localhost:3000" });
 
-localClient.interceptors.request.use(async (config) => {
-  if (config.url === "/api/auth/refresh-token") return config;
+export const apiClient = axios.create({ baseURL: "http://localhost:5555" });
+
+apiClient.interceptors.request.use(async (config) => {
+  if (config.url === "/users/refresh-token") return config;
 
   const authorization = config.headers.Authorization || "";
   const accessToken = authorization.split("Bearer ")[1];
@@ -57,30 +59,30 @@ const getMovie = async (movieId) => {
 };
 
 const signUp = async (dto) => {
-  const url = "/api/auth/sign-up";
-  const response = await localClient.post(url, dto);
+  const url = "/users/sign-up";
+  const response = await apiClient.post(url, dto);
   const data = response.data;
 
   return data;
 };
 
 const logIn = async (dto) => {
-  const url = "/api/auth/log-in";
-  const response = await localClient.post(url, dto);
+  const url = "/users/log-in";
+  const response = await apiClient.post(url, dto);
   const data = response.data;
 
   const { accessToken, refreshToken } = data;
 
   // 이후 요청의 헤더에 토큰이 실려갈 수 있도록 조치
-  localClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
+  apiClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
   localStorage.setItem("refreshToken", refreshToken);
 
   return data;
 };
 
 const refreshToken = async (prevRefreshToken) => {
-  const url = "/api/auth/refresh-token";
-  const response = await localClient.post(url, {
+  const url = "/users/refresh-token";
+  const response = await apiClient.post(url, {
     refreshToken: prevRefreshToken,
   });
   const data = response.data;
@@ -88,7 +90,7 @@ const refreshToken = async (prevRefreshToken) => {
   const { accessToken, refreshToken } = data;
 
   // 이후 요청의 헤더에 토큰이 실려갈 수 있도록 조치
-  localClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
+  apiClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
   localStorage.setItem("refreshToken", refreshToken);
 
   return data;

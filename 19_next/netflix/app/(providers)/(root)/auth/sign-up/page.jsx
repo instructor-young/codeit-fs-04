@@ -19,16 +19,18 @@ function SignUpPage() {
     e.preventDefault();
 
     const email = e.target.email.value;
+    const nickname = e.target.nickname.value;
     const password = e.target.password.value;
     const passwordConfirm = e.target.passwordConfirm.value;
 
     if (!email) return alert("이메일을 입력해 주세요");
+    if (!nickname) return alert("닉네임을 입력해 주세요");
     if (!password) return alert("비밀번호를 입력해 주세요");
     if (!passwordConfirm) return alert("비밀번호 확인을 입력해 주세요");
     if (password !== passwordConfirm)
       return alert("비밀번호와 비밀번호 확인이 일치하지 않습니다");
 
-    const data = { email, password };
+    const data = { email, nickname, password };
 
     signUp(data);
   };
@@ -39,6 +41,7 @@ function SignUpPage() {
         <h1 className="text-3xl font-bold">회원가입</h1>
 
         <Input label="이메일" name="email" type="email" required />
+        <Input label="닉네임" name="nickname" type="text" required />
         <Input
           label="비밀번호"
           name="password"

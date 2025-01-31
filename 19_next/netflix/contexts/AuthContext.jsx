@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
   const refreshToken = searchParams.get("refreshToken");
 
   useEffect(() => {
-    if (!accessToken && !refreshToken) {
+    if (!!accessToken && !!refreshToken) {
       // 헤더에 accssToken
       localClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
 
