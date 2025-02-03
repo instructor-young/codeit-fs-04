@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const prisma = require("../prisma/client");
 const multer = require("multer");
+const { default: UserModel } = require("../models/user.model");
 
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -150,9 +151,7 @@ router.get("/reviews", async (req, res, next) => {
     const userId = req.userId;
     if (!userId) throw new Error("401/Unauthorized");
 
-    const movieComments = await prisma.movieComment.findMany({
-      where: { userId },
-    });
+    const movieComments = await UserModel.getMyReviews(userId);
 
     res.json(movieComments);
   } catch (e) {

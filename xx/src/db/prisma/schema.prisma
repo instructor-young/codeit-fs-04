@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  encryptedPassword String
+  nickname          String
+  brief             String
+  tweets            Tweet[]
+  comments          Comment[]
+  createdAt         DateTime  @default(now())
+}
+
+model Tweet {
+  id        String    @id @default(cuid())
+  authorId  String
+  author    User      @relation(fields: [authorId], references: [id])
+  content   String
+  comments  Comment[]
+  createdAt DateTime  @default(now())
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  tweet     Tweet    @relation(fields: [tweetId], references: [id])
+  tweetId   String
+  content   String
+  createdAt DateTime @default(now())
+}
