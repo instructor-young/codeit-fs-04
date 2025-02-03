@@ -50,7 +50,7 @@ router.patch("/:tweetId", async (req, res, next) => {
     if (!userId) throw new Error("401/Log in required");
 
     const tweetId = req.params.tweetId;
-    const tweet = await prisma.tweet.findUnique({
+    const tweet = await prisma.tweet.findFirst({
       where: { AND: { id: tweetId, authorId: userId } },
     });
     if (!tweet) throw new Error("400/Bad request");
@@ -78,9 +78,41 @@ router.delete("/:tweetId", async (req, res, next) => {
 
     const tweetId = req.params.tweetId;
     const tweet = await prisma.tweet.delete({
-      where: { AND: { id: tweetId, authorId: userId } },
+      where: { id: tweetId, authorId: userId },
     });
     if (!tweet) throw new Error("400/Bad request");
+
+    res.status(204).send();
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.post("/:tweetId/bookmarks", async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    if (!userId) throw new Error("401/Log in required");
+
+    const tweetId = req.params.tweetId;
+    const bookmark = await prisma.bookmark.create({
+      data: { tweetId, userId },
+    });
+
+    res.status(201).json(bookmark);
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.delete("/:tweetId/bookmarks", async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    if (!userId) throw new Error("401/Log in required");
+
+    const tweetId = req.params.tweetId;
+    await prisma.bookmark.delete({
+      where: { userId_tweetId: { userId, tweetId } },
+    });
 
     res.status(204).send();
   } catch (e) {

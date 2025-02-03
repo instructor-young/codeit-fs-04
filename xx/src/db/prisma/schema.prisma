@@ -11,23 +11,36 @@ datasource db {
 }
 
 model User {
-  id                String    @id @default(cuid())
-  email             String    @unique
+  id                String      @id @default(cuid())
+  email             String      @unique
   encryptedPassword String
   nickname          String
   brief             String
   tweets            Tweet[]
   comments          Comment[]
-  createdAt         DateTime  @default(now())
+  bookmarks         Bookmark[]
+  followers         Following[] @relation(name: "followed")
+  followings        Following[] @relation(name: "follower")
+  createdAt         DateTime    @default(now())
+}
+
+model Following {
+  id         String   @id @default(cuid())
+  follower   User     @relation(name: "follower", fields: [followerId], references: [id])
+  followerId String
+  followed   User     @relation(name: "followed", fields: [followedId], references: [id])
+  followedId String
+  createdAt  DateTime @default(now())
 }
 
 model Tweet {
-  id        String    @id @default(cuid())
+  id        String     @id @default(cuid())
   authorId  String
-  author    User      @relation(fields: [authorId], references: [id])
+  author    User       @relation(fields: [authorId], references: [id])
   content   String
   comments  Comment[]
-  createdAt DateTime  @default(now())
+  bookmarks Bookmark[]
+  createdAt DateTime   @default(now())
 }
 
 model Comment {
@@ -38,4 +51,15 @@ model Comment {
   tweetId   String
   content   String
   createdAt DateTime @default(now())
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  tweet     Tweet    @relation(fields: [tweetId], references: [id])
+  tweetId   String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, tweetId])
 }

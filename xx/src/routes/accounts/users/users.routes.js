@@ -76,4 +76,102 @@ router.post("/log-in", async (req, res, next) => {
   }
 });
 
+router.put("/", async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    if (!userId) throw new Error("401/Log in required");
+
+    const { nickname, brief } = req.body;
+    if (!validator.isLength(nickname, { min: 1, max: 20 }))
+      throw new Error("400/Nickname length should be between 1 and 20");
+    if (!validator.isLength(brief, { min: 1, max: 200 }))
+      throw new Error("400/Brief length should be between 1 and 200");
+
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: { nickname, brief },
+      omit: { encryptedPassword: true },
+    });
+
+    res.status(200).json(user);
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/:userId", async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        nickname: true,
+        brief: true,
+        tweets: { orderBy: { createdAt: "desc" } },
+        _count: {
+          select: {
+            followings: true,
+            followers: true,
+          },
+        },
+      },
+    });
+
+    res.status(200).json(user);
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/:userId/followings", async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        followings: {
+          select: { followed: { select: { nickname: true, brief: true } } },
+        },
+      },
+    });
+    const result = user.followings.map((following) => following.followed);
+
+    res.json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/:userId/followers", async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        followers: {
+          select: { follower: { select: { nickname: true, brief: true } } },
+        },
+      },
+    });
+    const result = user.followers.map((follower) => follower.follower);
+
+    res.json(result);
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/:userId/bookmarks", async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const bookmarks = await prisma.bookmark.findMany({ where: { userId } });
+
+    res.json(bookmarks);
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = router;
