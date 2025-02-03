@@ -31,6 +31,8 @@ model Following {
   followed   User     @relation(name: "followed", fields: [followedId], references: [id])
   followedId String
   createdAt  DateTime @default(now())
+
+  @@unique([followerId, followedId])
 }
 
 model Tweet {

@@ -1,6 +1,4 @@
 const express = require("express");
-const validator = require("validator");
-const prisma = require("../../../db/prisma/client");
 const user = require("../../../models/user.model");
 const loggedInOnly = require("../../../middlewares/loggedInOnly.middleware");
 
@@ -68,18 +66,9 @@ router.get("/:userId", async (req, res, next) => {
 router.get("/:userId/followings", async (req, res, next) => {
   try {
     const userId = req.params.userId;
+    const followings = await user.getFollowingsOfUser(userId);
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        followings: {
-          select: { followed: { select: { nickname: true, brief: true } } },
-        },
-      },
-    });
-    const result = user.followings.map((following) => following.followed);
-
-    res.json(result);
+    res.json(followings);
   } catch (e) {
     next(e);
   }
@@ -88,18 +77,9 @@ router.get("/:userId/followings", async (req, res, next) => {
 router.get("/:userId/followers", async (req, res, next) => {
   try {
     const userId = req.params.userId;
+    const followers = await user.getFollowersOfUser(userId);
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        followers: {
-          select: { follower: { select: { nickname: true, brief: true } } },
-        },
-      },
-    });
-    const result = user.followers.map((follower) => follower.follower);
-
-    res.json(result);
+    res.json(followers);
   } catch (e) {
     next(e);
   }
@@ -108,7 +88,7 @@ router.get("/:userId/followers", async (req, res, next) => {
 router.get("/:userId/bookmarks", async (req, res, next) => {
   try {
     const userId = req.params.userId;
-    const bookmarks = await prisma.bookmark.findMany({ where: { userId } });
+    const bookmarks = user.getBookmarksOfUser(userId);
 
     res.json(bookmarks);
   } catch (e) {

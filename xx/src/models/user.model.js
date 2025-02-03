@@ -2,6 +2,7 @@ const validator = require("validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const prisma = require("../db/prisma/client");
+const bookmark = require("./bookmark.model");
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
@@ -100,6 +101,57 @@ class User {
     });
 
     return user;
+  }
+
+  async getFollowingsOfUser(userId) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        followings: {
+          select: { followed: { select: { nickname: true, brief: true } } },
+        },
+      },
+    });
+    const followings = user.followings.map((following) => following.followed);
+
+    return followings;
+  }
+
+  async getFollowersOfUser(userId) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        followers: {
+          select: { follower: { select: { nickname: true, brief: true } } },
+        },
+      },
+    });
+    const followers = user.followers.map((follower) => follower.follower);
+
+    return followers;
+  }
+
+  getBookmarksOfUser(...args) {
+    return bookmark.getBookmarksOfUser(...args);
+  }
+
+  async follow(myId, targetId) {
+    const data = { followerId: myId, followedId: targetId };
+    const following = await prisma.following.create({ data });
+
+    return following;
+  }
+
+  async unfollow(myId, targetId) {
+    const followerId_followedId = { followerId: myId, followedId: targetId };
+
+    await prisma.following.delete({ where: { followerId_followedId } });
+  }
+
+  async banFollower(myId, targetId) {
+    const followerId_followedId = { followerId: targetId, followedId: myId };
+
+    await prisma.following.delete({ where: { followerId_followedId } });
   }
 }
 

@@ -3,6 +3,7 @@ const prisma = require("../../db/prisma/client");
 const tweet = require("../../models/tweet.model");
 const loggedInOnly = require("../../middlewares/loggedInOnly.middleware");
 const tweetAuthorOnly = require("../../middlewares/tweetAuthorOnly.middlware");
+const bookmark = require("../../models/bookmark.model");
 
 const router = express.Router();
 
@@ -74,27 +75,29 @@ router.delete(
   }
 );
 
+/**
+ * 트윗 북마크하기
+ */
 router.post("/:tweetId/bookmarks", loggedInOnly, async (req, res, next) => {
   try {
     const userId = req.userId;
     const tweetId = req.params.tweetId;
-    const bookmark = await prisma.bookmark.create({
-      data: { tweetId, userId },
-    });
+    const newBookmark = await bookmark.bookmark(userId, tweetId);
 
-    res.status(201).json(bookmark);
+    res.status(201).json(newBookmark);
   } catch (e) {
     next(e);
   }
 });
 
+/**
+ * 트윗 북마크 해제하기
+ */
 router.delete("/:tweetId/bookmarks", loggedInOnly, async (req, res, next) => {
   try {
     const userId = req.userId;
     const tweetId = req.params.tweetId;
-    await prisma.bookmark.delete({
-      where: { userId_tweetId: { userId, tweetId } },
-    });
+    await bookmark.unbookmark(userId, tweetId);
 
     res.status(204).send();
   } catch (e) {
