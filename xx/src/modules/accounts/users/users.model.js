@@ -1,8 +1,8 @@
 const validator = require("validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const prisma = require("../db/prisma/client");
-const bookmark = require("./bookmark.model");
+const bookmark = require("../../bookmarks/bookmarks.model");
+const prisma = require("../../../db/prisma/client");
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 

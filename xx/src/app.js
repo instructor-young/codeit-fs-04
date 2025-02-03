@@ -2,9 +2,11 @@ require("dotenv").config();
 
 const express = require("express");
 const morgan = require("morgan");
-const authMiddleware = require("./middlewares/auth.middleware");
-const routes = require("./routes/index.routes");
-const errorMiddleware = require("./middlewares/error.middleware");
+const routes = require("./modules/index.routes");
+const {
+  authMiddleware,
+  errorMiddleware,
+} = require("./modules/index.middlewares");
 
 const app = express();
 const PORT = 5050;

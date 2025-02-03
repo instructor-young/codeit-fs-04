@@ -1,6 +1,6 @@
 const express = require("express");
-const user = require("../../../models/user.model");
-const loggedInOnly = require("../../../middlewares/loggedInOnly.middleware");
+const user = require("./users.model");
+const { loggedInOnly } = require("../../index.middlewares");
 
 const router = express.Router();
 

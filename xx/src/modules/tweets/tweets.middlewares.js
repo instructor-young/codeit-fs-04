@@ -1,4 +1,4 @@
-const tweet = require("../models/tweet.model");
+const tweet = require("./tweets.model");
 
 async function tweetAuthorOnly(req, res, next) {
   try {
@@ -14,4 +14,4 @@ async function tweetAuthorOnly(req, res, next) {
   }
 }
 
-module.exports = tweetAuthorOnly;
+module.exports = { tweetAuthorOnly };

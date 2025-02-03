@@ -1,4 +1,4 @@
-const prisma = require("../db/prisma/client");
+const prisma = require("../../db/prisma/client");
 
 class Tweet {
   async checkIsAuthor(tweetId, authorId) {

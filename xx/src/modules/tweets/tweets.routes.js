@@ -1,9 +1,8 @@
 const express = require("express");
-const prisma = require("../../db/prisma/client");
-const tweet = require("../../models/tweet.model");
-const loggedInOnly = require("../../middlewares/loggedInOnly.middleware");
-const tweetAuthorOnly = require("../../middlewares/tweetAuthorOnly.middlware");
-const bookmark = require("../../models/bookmark.model");
+const tweet = require("./tweets.model");
+const { tweetAuthorOnly } = require("./tweets.middlewares");
+const bookmark = require("../bookmarks/bookmarks.model");
+const { loggedInOnly } = require("../index.middlewares");
 
 const router = express.Router();
 
