@@ -3,7 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const authMiddleware = require("./middlewares/auth.middleware");
-const routes = require("./routes/routes");
+const routes = require("./controllers/routes");
 const errorMiddleware = require("./middlewares/error.middleware");
 
 const app = express();
